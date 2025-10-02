@@ -1,46 +1,66 @@
-<h1>💸 Stutz Tracker 💸</h1>
+<div class="page-container">
+    <h1>💸 Stutz Tracker 💸</h1>
 
-<div class="username-container">
-    <span>{{ userService.getUserName() || 'Guest' }}</span>
-    <button (click)="editUserName()">Edit</button>
-</div>
-
-
-<!-- Leaderboard -->
-<table>
-  <thead>
-  <tr>
-    <th>Spieler</th>
-    <th>Stutz 💰</th>
-    <th width="100">Hinzufügen</th>
-  </tr>
-  </thead>
-  <tbody>
-  @for(player of dataStore.players(); track player){
-    <tr>
-      <td>{{player.name}}</td>
-      <td>{{player.stutz}}.- </td>
-      <td>
-        <button (click)="openDialog(player.id)">+1</button>
-      </td>
-    </tr>
-  }
-  </tbody>
-</table>
-
-<!-- Reason Dialog -->
-@if(showDialog()){
-  <div class="dialog-overlay">
-    <div class="dialog">
-      <h2>En Stutz</h2>
-      <label>Grund:</label>
-      <input type="text" [(ngModel)]="reason" placeholder="Grund">
-      <div class="dialog-buttons">
-        <button (click)="addStutz()">Confirm</button>
-        <button (click)="closeDialog()">Cancel</button>
-      </div>
+    <div class="username-container">
+        <span>{{ userService.getUserName() || 'Guest' }}</span>
+        <button matButton="filled" (click)="editUserName()">Edit</button>
     </div>
-  </div>
 
-}
-<stutz-recent-transactions></stutz-recent-transactions>
+
+    <!-- Leaderboard -->
+    <table mat-table [dataSource]="dataStore.players()" class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Spieler</th>
+            <td mat-cell *matCellDef="let player"> {{ player.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="stutz">
+            <th mat-header-cell *matHeaderCellDef> Stutz 💰</th>
+            <td mat-cell *matCellDef="let player"> {{ player.stutz }}.-</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Hinzufügen</th>
+            <td mat-cell *matCellDef="let player">
+                <button matMiniFab (click)="openDialog(player.id, dialogTemplate)">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['name', 'stutz', 'actions']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['name', 'stutz', 'actions'];"></tr>
+    </table>
+
+    <!-- Reason Dialog -->
+    <ng-template #dialogTemplate>
+        <h2 mat-dialog-title>En Stutz</h2>
+        <mat-dialog-content>
+            <mat-form-field appearance="fill">
+                <mat-label>Grund</mat-label>
+                <input matInput [(ngModel)]="reason" placeholder="Grund">
+            </mat-form-field>
+        </mat-dialog-content>
+        <mat-dialog-actions>
+            <button mat-button (click)="closeDialog()">Cancel</button>
+            <button mat-raised-button color="primary" (click)="addStutz()">Confirm</button>
+        </mat-dialog-actions>
+    </ng-template>
+
+
+    <ng-template #editUserNameDialog>
+        <h2 mat-dialog-title>Edit Username</h2>
+        <mat-dialog-content>
+            <mat-form-field appearance="fill">
+                <mat-label>Username</mat-label>
+                <input matInput [(ngModel)]="tempUserName"/>
+            </mat-form-field>
+        </mat-dialog-content>
+        <mat-dialog-actions>
+            <button mat-button (click)="closeDialog()">Cancel</button>
+            <button mat-raised-button color="primary" (click)="saveUserName()">Save</button>
+        </mat-dialog-actions>
+    </ng-template>
+
+    <stutz-recent-transactions></stutz-recent-transactions>
+</div>
