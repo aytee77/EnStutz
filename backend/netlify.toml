@@ -1,0 +1,5 @@
+[build]
+  functions = "functions-dist"
+
+[dev]
+  functions = "functions-dist"

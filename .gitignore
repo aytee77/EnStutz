@@ -9,7 +9,9 @@
 
 # Node modules and dependency files
 /node_modules/
+backend/node_modules/
 /package-lock.json
+backend/package-lock.json
 /yarn.lock
 
 # Environment files
@@ -29,3 +31,8 @@ yarn-debug.log*
 yarn-error.log*
 
 /stutz-tracker/src/environments/environment.development.ts
+
+# Local Netlify folder
+.netlify
+
+backend/functions-dist/
