@@ -1,133 +1,56 @@
-:root{
-    --background-color: #121212;
-    --text-color: #e0e0e0;
-    --primary-color: #ff9800;
-    --table-background: #1e1e1e;
-    --border-color: #333;
-    --table-hover: #2a2a2a;
-    --button-hover: #ffa726;
-    --dialog-overlay: rgba(0, 0, 0, 0.8);
-    --dialog-background: #1e1e1e;
-    --input-background: #2a2a2a;
-    --placeholder-color: #888;
+
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$cyan-palette,
+      tertiary: mat.$orange-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
 }
 
-/* Global styles */
 body {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: dark;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
 }
+
 
 /* Header styling */
 h1 {
-    color: var(--primary-color);
     text-align: center;
-    margin: 20px 0;
 }
 h2 {
-    color: var(--primary-color);
-    text-align: center;
-    margin: 20px 0;
-}
-
-/* Table styling */
-table {
-    width: 90%;
-    max-width: 900px;
-    margin: 20px auto;
-    border-collapse: collapse;
-    background-color: var(--table-background);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-th, td {
-    padding: 12px 15px;
     text-align: center;
 }
 
-th {
-    background-color: var(--border-color);
-    color: var(--primary-color);
-    font-weight: bold;
+.page-container {
+    max-width: 900px; /* Adjust the max-width as needed */
+    margin: 0 auto; /* Centers the content on the page */
+    padding: 20px; /* Adds some spacing around the content */
+    box-sizing: border-box; /* Ensures padding is included in the width */
 }
 
-td {
-    border-bottom: 1px solid var(--border-color);
-}
 
-tr:hover {
-    background-color: var(--table-hover);
-}
 
-/* Button styling */
-button {
-    background-color: var(--primary-color);
-    color: var(--background-color);
-    border: none;
-    border-radius: 4px;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-button:hover {
-    background-color: var(--button-hover);
-}
-
-/* Dialog overlay */
-.dialog-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--dialog-overlay);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.dialog {
-    background-color: var(--dialog-background);
-    color: var(--text-color);
-    padding: 20px;
-    border-radius: 8px;
-    width: 300px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.dialog h2 {
-    margin-top: 0;
-    color: var(--primary-color);
-}
-
-.dialog-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.dialog-buttons button {
-    flex: 1;
-    margin: 0 5px;
-}
-
-/* Input styling */
-input[type="text"] {
-    width: 80%;
-    padding: 8px;
-    margin-top: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background-color: var(--input-background);
-    color: var(--text-color);
-}
-
-input[type="text"]::placeholder {
-    color: var(--placeholder-color);
-}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

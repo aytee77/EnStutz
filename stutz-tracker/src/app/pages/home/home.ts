@@ -1,5 +1,4 @@
-import {Component, inject, signal} from '@angular/core';
-import {AsyncPipe} from '@angular/common';
+import {Component, inject, signal, TemplateRef, ViewChild} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {TransactionService} from "../../shared/services/transaction.service";
 import {PlayerService} from "../../shared/services/player.service";
@@ -9,17 +8,31 @@ import {UserService} from '../../shared/services/user.service';
 import {DiscordService} from '../../shared/services/discord.service';
 import {PlayernamePipe} from '../../shared/pipes/playername-pipe';
 import {firstValueFrom} from 'rxjs';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTableModule} from '@angular/material/table';
+import {MatIconModule} from '@angular/material/icon';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 
 @Component({
     selector: 'stutz-home',
     imports: [
         FormsModule,
-        RecentTransactions
+        RecentTransactions,
+        MatButtonModule,
+        MatTableModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDialogModule
     ],
     templateUrl: './home.html',
     styleUrl: './home.scss'
 })
 export class Home {
+    @ViewChild('editUserNameDialog') protected editUserNameDialog!: TemplateRef<any>;
+    readonly dialog = inject(MatDialog);
     private readonly playerService = inject(PlayerService);
     private readonly transactionService = inject(TransactionService);
     protected readonly userService = inject(UserService);
@@ -28,14 +41,15 @@ export class Home {
 
     protected readonly dataStore = inject(DataStore);
 
-    showDialog = signal<boolean>(false);
     reason: string = '';
     currentPlayerId: string = '';
+    protected tempUserName: string = '';
 
-    protected openDialog(playerId: string) {
+
+    protected openDialog(playerId: string, dialogTemplate: TemplateRef<any>) {
         this.currentPlayerId = playerId;
         this.reason = '';
-        this.showDialog.set(true);
+        this.dialog.open(dialogTemplate);
     }
 
     public async addStutz() {
@@ -51,7 +65,7 @@ export class Home {
 
         await this.playerService.incrementStutz(this.currentPlayerId, 1);
         await this.transactionService.addTransaction(transaction);
-        
+
         this.discordService.sendTransactionMessage({
             ...transaction,
             playerName: await firstValueFrom(this.playernamePipe.transform(this.currentPlayerId))
@@ -62,15 +76,20 @@ export class Home {
     }
 
     protected closeDialog() {
-        this.showDialog.set(false);
+        this.dialog.closeAll();
         this.currentPlayerId = '';
         this.reason = '';
     }
 
     protected editUserName(): void {
-        const newName = prompt('Enter your new username:', this.userService.getUserName() || '');
-        if (newName) {
-            this.userService.setUserName(newName);
+        this.tempUserName = this.userService.getUserName() || '';
+        this.dialog.open(this.editUserNameDialog);
+    }
+
+    protected saveUserName(): void {
+        if (this.tempUserName) {
+            this.userService.setUserName(this.tempUserName);
         }
+        this.closeDialog();
     }
 }

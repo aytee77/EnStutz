@@ -6,3 +6,7 @@ a simple firestore database
 
 ## hosting
 hosted on firebase
+
+## Backend
+simple node function that send data to the discord bot, hosted in netlify
+https://app.netlify.com/projects/enstutz/overview
