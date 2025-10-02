@@ -1,0 +1,46 @@
+<h1>💸 Stutz Tracker 💸</h1>
+
+<div class="username-container">
+    <span>{{ userService.getUserName() || 'Guest' }}</span>
+    <button (click)="editUserName()">Edit</button>
+</div>
+
+
+<!-- Leaderboard -->
+<table>
+  <thead>
+  <tr>
+    <th>Spieler</th>
+    <th>Stutz 💰</th>
+    <th width="100">Hinzufügen</th>
+  </tr>
+  </thead>
+  <tbody>
+  @for(player of dataStore.players(); track player){
+    <tr>
+      <td>{{player.name}}</td>
+      <td>{{player.stutz}}.- </td>
+      <td>
+        <button (click)="openDialog(player.id)">+1</button>
+      </td>
+    </tr>
+  }
+  </tbody>
+</table>
+
+<!-- Reason Dialog -->
+@if(showDialog()){
+  <div class="dialog-overlay">
+    <div class="dialog">
+      <h2>En Stutz</h2>
+      <label>Grund:</label>
+      <input type="text" [(ngModel)]="reason" placeholder="Grund">
+      <div class="dialog-buttons">
+        <button (click)="addStutz()">Confirm</button>
+        <button (click)="closeDialog()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+}
+<stutz-recent-transactions></stutz-recent-transactions>
