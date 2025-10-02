@@ -4,6 +4,7 @@ import {Transaction} from '../../models/transaction';
 import {PlayerService} from './player.service';
 import {firstValueFrom, map, Observable} from 'rxjs';
 import {Player} from '../../models/player';
+import {DiscordService} from './discord.service';
 
 @Injectable({
   providedIn: 'root'

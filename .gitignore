@@ -36,3 +36,4 @@ yarn-error.log*
 .netlify
 
 backend/functions-dist/
+/backend/.env

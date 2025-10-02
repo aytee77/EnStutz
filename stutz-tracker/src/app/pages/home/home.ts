@@ -6,6 +6,9 @@ import {PlayerService} from "../../shared/services/player.service";
 import {RecentTransactions} from "./recent-transactions/recent-transactions";
 import {DataStore} from "../../shared/stores/data-store";
 import {UserService} from '../../shared/services/user.service';
+import {DiscordService} from '../../shared/services/discord.service';
+import {PlayernamePipe} from '../../shared/pipes/playername-pipe';
+import {firstValueFrom} from 'rxjs';
 
 @Component({
     selector: 'stutz-home',
@@ -20,6 +23,8 @@ export class Home {
     private readonly playerService = inject(PlayerService);
     private readonly transactionService = inject(TransactionService);
     protected readonly userService = inject(UserService);
+    protected readonly discordService = inject(DiscordService);
+    protected readonly playernamePipe = inject(PlayernamePipe);
 
     protected readonly dataStore = inject(DataStore);
 
@@ -36,14 +41,21 @@ export class Home {
     public async addStutz() {
         if (!this.currentPlayerId) return;
 
-        await this.playerService.incrementStutz(this.currentPlayerId, 1);
-        await this.transactionService.addTransaction({
+        const transaction = {
             playerId: this.currentPlayerId,
             amount: 1,
             reason: this.reason || 'Kein Grund angegeben',
             addedBy: this.userService.getUserName() || 'Unbekannt',
             timestamp: new Date()
-        });
+        }
+
+        await this.playerService.incrementStutz(this.currentPlayerId, 1);
+        await this.transactionService.addTransaction(transaction);
+        
+        this.discordService.sendTransactionMessage({
+            ...transaction,
+            playerName: await firstValueFrom(this.playernamePipe.transform(this.currentPlayerId))
+        }).then();
 
         await this.dataStore.loadData();
         this.closeDialog();
