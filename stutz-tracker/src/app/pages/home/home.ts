@@ -1,4 +1,4 @@
-import {Component, inject, signal, TemplateRef, ViewChild} from '@angular/core';
+import {Component, computed, inject, signal, TemplateRef, ViewChild} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {TransactionService} from "../../shared/services/transaction.service";
 import {PlayerService} from "../../shared/services/player.service";
@@ -38,6 +38,8 @@ export class Home {
     protected readonly userService = inject(UserService);
     protected readonly discordService = inject(DiscordService);
     protected readonly playernamePipe = inject(PlayernamePipe);
+
+    protected totalStutz = computed(() => this.dataStore.players().reduce((sum, player) => sum + player.stutz, 0));
 
     protected readonly dataStore = inject(DataStore);
 
